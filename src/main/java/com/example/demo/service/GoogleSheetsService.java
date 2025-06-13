@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +45,13 @@ public class GoogleSheetsService {
 //    }
 
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
+
+        InputStream inputStream1 = new FileInputStream("src/main/resources/credentials.json");
+        log.info("inputStream1 {}", inputStream1.read());
+
+        InputStream inputStream2 = getClass().getClassLoader().getResourceAsStream("credentials.json");
+        log.info("inputStream2 {}", inputStream2.read());
+
         GoogleCredentials credentials = GoogleCredentials.fromStream(
                         Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("credentials.json")))
                 .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
@@ -59,7 +67,7 @@ public class GoogleSheetsService {
     public void addRow(ContactFormDTO contactFormDTO) throws IOException {
         ValueRange body = new ValueRange()
                 .setValues(List.of(List.of(
-                        UUID.randomUUID(),
+//                        UUID.randomUUID(),
                         contactFormDTO.getName(),
                         contactFormDTO.getEmail(),
                         contactFormDTO.getPhone(),
