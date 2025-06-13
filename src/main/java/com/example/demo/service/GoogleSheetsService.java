@@ -46,6 +46,7 @@ public class GoogleSheetsService {
 
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
 
+        log.info("test logger");
         InputStream inputStream1 = new FileInputStream("src/main/resources/credentials.json");
         log.info("inputStream1 {}", inputStream1.read());
 
