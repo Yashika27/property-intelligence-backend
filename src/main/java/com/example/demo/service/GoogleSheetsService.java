@@ -50,11 +50,11 @@ public class GoogleSheetsService {
 //        InputStream inputStream1 = new FileInputStream("src/main/resources/credentials.json");
 //        log.info("inputStream1 {}", inputStream1.read());
 
-        InputStream inputStream2 = getClass().getClassLoader().getResourceAsStream("credentials.json");
+        InputStream inputStream2 = getClass().getClassLoader().getResourceAsStream("/credentials.json");
         log.info("inputStream2 {}", inputStream2.read());
 
         GoogleCredentials credentials = GoogleCredentials.fromStream(
-                        Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("credentials.json")))
+                        Objects.requireNonNull(inputStream2))
                 .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
 
         return new Sheets.Builder(
