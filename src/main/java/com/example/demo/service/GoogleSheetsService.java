@@ -9,6 +9,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -51,11 +52,9 @@ public class GoogleSheetsService {
 //        InputStream inputStream1 = new FileInputStream("src/main/resources/credentials.json");
 //        log.info("inputStream1 {}", inputStream1.read());
 
-        InputStream inputStream2 = getClass().getClassLoader().getResourceAsStream("credentials.json");
+//        InputStream inputStream2 = getClass().getClassLoader().getResourceAsStream("credentials.json");
+        InputStream inputStream2 = new ClassPathResource("credentials.json").getInputStream();
 
-        if(inputStream2 == null) {
-            throw new FileNotFoundException("credentials.json not found in classpath");
-        }
         log.info("inputStream2 {}", inputStream2.read());
 
         GoogleCredentials credentials = GoogleCredentials.fromStream(
