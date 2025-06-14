@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,9 @@ public class GoogleSheetsService {
         log.info("test logger");
 //        InputStream inputStream1 = new FileInputStream("src/main/resources/credentials.json");
 //        log.info("inputStream1 {}", inputStream1.read());
+
+        URL resource = getClass().getClassLoader().getResource("credentials.json");
+        log.info("File URL: {}", resource);
 
 //        InputStream inputStream2 = getClass().getClassLoader().getResourceAsStream("credentials.json");
         InputStream inputStream2 = new ClassPathResource("credentials.json").getInputStream();
