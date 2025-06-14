@@ -50,6 +50,7 @@ public class GoogleSheetsService {
 
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
 
+        log.info("creds path from env variable: {}", googleCredsPath);
         GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(googleCredsPath))
                 .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
 
