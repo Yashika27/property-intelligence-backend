@@ -9,6 +9,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -22,6 +23,9 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class GoogleSheetsService {
+
+    @Value("${google.credentials.path}")
+    private String googleCredsPath;
 
     private Sheets sheetsService;
     private final String SPREADSHEET_ID = "143-dpsmXDRu9pYI3JOcWLAVFqpQIgxyBcz98Yv6Q67Q";
@@ -46,15 +50,7 @@ public class GoogleSheetsService {
 
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
 
-        log.info("test logger");
-//        InputStream inputStream1 = new FileInputStream("src/main/resources/credentials.json");
-//        log.info("inputStream1 {}", inputStream1.read());
-
-        InputStream inputStream2 = getClass().getClassLoader().getResourceAsStream("/credentials.json");
-        log.info("inputStream2 {}", inputStream2.read());
-
-        GoogleCredentials credentials = GoogleCredentials.fromStream(
-                        Objects.requireNonNull(inputStream2))
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(googleCredsPath))
                 .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
 
         return new Sheets.Builder(
