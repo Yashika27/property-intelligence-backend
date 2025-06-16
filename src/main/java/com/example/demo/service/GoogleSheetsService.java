@@ -72,6 +72,9 @@ public class GoogleSheetsService {
 //    }
 
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
+        String testVar = System.getenv("TEST_VAR");
+        log.info("testVar: {}", testVar);
+
         String base64Credentials = System.getenv("GOOGLE_CREDENTIALS_BASE64");
         if (base64Credentials == null) {
             throw new IllegalStateException("Missing GOOGLE_CREDENTIALS_BASE64 env variable");
