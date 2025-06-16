@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -47,22 +45,42 @@ public class GoogleSheetsService {
 //                .build();
 //    }
 
-    private Sheets getSheetsService() throws IOException, GeneralSecurityException {
-
-        log.info("test logger");
-//        InputStream inputStream1 = new FileInputStream("src/main/resources/credentials.json");
-//        log.info("inputStream1 {}", inputStream1.read());
-
-        URL resource = getClass().getClassLoader().getResource("credentials.json");
-        log.info("File URL: {}", resource);
-
+//    private Sheets getSheetsService() throws IOException, GeneralSecurityException {
+//
+//        log.info("test logger");
+////        InputStream inputStream1 = new FileInputStream("src/main/resources/credentials.json");
+////        log.info("inputStream1 {}", inputStream1.read());
+////
+////        URL resource = getClass().getClassLoader().getResource("credentials.json");
+////        log.info("File URL: {}", resource);
+//
 //        InputStream inputStream2 = getClass().getClassLoader().getResourceAsStream("credentials.json");
-        InputStream inputStream2 = new ClassPathResource("credentials.json").getInputStream();
+////        InputStream inputStream2 = new ClassPathResource("credentials.json").getInputStream();
+//
+//        log.info("inputStream2 {}", inputStream2.read());
+//
+//        GoogleCredentials credentials = GoogleCredentials.fromStream(
+//                        Objects.requireNonNull(inputStream2))
+//                .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
+//
+//        return new Sheets.Builder(
+//                GoogleNetHttpTransport.newTrustedTransport(),
+//                JacksonFactory.getDefaultInstance(),
+//                new HttpCredentialsAdapter(credentials))
+//                .setApplicationName("My App")
+//                .build();
+//    }
 
-        log.info("inputStream2 {}", inputStream2.read());
+    private Sheets getSheetsService() throws IOException, GeneralSecurityException {
+        String base64Credentials = System.getenv("GOOGLE_CREDENTIALS_BASE64");
+        if (base64Credentials == null) {
+            throw new IllegalStateException("Missing GOOGLE_CREDENTIALS_BASE64 env variable");
+        }
 
-        GoogleCredentials credentials = GoogleCredentials.fromStream(
-                        Objects.requireNonNull(inputStream2))
+        byte[] decodedBytes = Base64.getDecoder().decode(base64Credentials);
+        InputStream credentialsStream = new ByteArrayInputStream(decodedBytes);
+
+        GoogleCredentials credentials = GoogleCredentials.fromStream(credentialsStream)
                 .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets"));
 
         return new Sheets.Builder(
